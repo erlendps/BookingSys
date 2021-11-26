@@ -38,25 +38,12 @@ public class User implements GroupListener {
    * @throws IllegalArgumentException if firstName or lastName is invalid
    */
   private void validateName(final String firstName, final String lastName) {
-    if (!matchName(firstName)) {
+    if (!StringValidation.matchName(firstName)) {
       throw new IllegalArgumentException("First name is not a valid name!");
     }
-    if (!matchName(lastName)) {
+    if (!StringValidation.matchName(lastName)) {
       throw new IllegalArgumentException("Last name is not a valid name!");
     }
-  }
-
-  /**
-   * Helper method that matches a name to regex.
-   *
-   * @param name name to match
-   *
-   * @return true if name matches, false otherwise
-   */
-  private boolean matchName(final String name) {
-    String regex = "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØ"
-            + "ÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,40}$";
-    return name.matches(regex);
   }
 
   /**
@@ -67,10 +54,7 @@ public class User implements GroupListener {
    * @throws IllegalArgumentException if the email is not valid
    */
   private void validateEmail(String email) {
-    // using unicode
-    String regex = "^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@"
-            + "[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$";
-    if (!email.matches(regex)) {
+    if (!StringValidation.matchEmail(email)) {
       throw new IllegalArgumentException("Email is not valid");
     }
   }
@@ -110,7 +94,7 @@ public class User implements GroupListener {
    */
   @Override
   public void receiveNotification(Object before, Object after) {
-    
+
   }
 }
 
