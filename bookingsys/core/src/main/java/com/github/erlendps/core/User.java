@@ -1,18 +1,30 @@
 package com.github.erlendps.core;
 
+import com.github.erlendps.core.util.DateChecker;
+import com.github.erlendps.core.util.StringValidation;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 /**
  * User class
  */
+@Embeddable
+@Entity
 public class User implements GroupListener {
-  private final String firstName;
-  private final String lastName;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
+  private String firstName;
+  private String lastName;
   private String email;
+  @OneToMany
   private Collection<Group> groups = new HashSet<>();
-  private Collection<Booking> bookings = new HashSet<>();
+  @OneToMany
+  private Collection<SingleDayBooking> bookings = new HashSet<>();
 
   /**
    * Constructor for User class.
@@ -28,6 +40,8 @@ public class User implements GroupListener {
     this.lastName = lastName;
     this.email = email;
   }
+
+  protected User() {}
 
   /**
    * Helper method to validate name.
@@ -83,9 +97,26 @@ public class User implements GroupListener {
    * @param endDate the end date
    * @param bookable the object to book
    */
-  public void addBooking(LocalDate startDate, LocalDate endDate, Bookable bookable) {
-
+  public void makeBooking(LocalDate startDate, LocalDate endDate, Bookable bookable) {
+    if (DateChecker.isBeforeNow(startDate)) {
+      throw new IllegalStateException("Start date is before now.");
+    }
+    if (!DateChecker.isChronological(startDate, endDate)) {
+      throw new IllegalStateException("Start date is after end date");
+    }
+    if (bookable == null) {
+      throw new IllegalArgumentException("Bookable is null");
+    }
+    AbstractBooking booking;
+    if (DateChecker.isSameDate(startDate, endDate)) {
+      booking = new SingleDayBooking(this, bookable, startDate);
+    }
+    else {
+      booking = new MultipleDayBooking(this, bookable, startDate, endDate);
+    }
+    bookable.addBooking(booking);
   }
+
   /**
    * Receives the notification.
    *
