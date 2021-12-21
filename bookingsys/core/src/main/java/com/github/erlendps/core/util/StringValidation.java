@@ -1,4 +1,4 @@
-package com.github.erlendps.core;
+package com.github.erlendps.core.util;
 
 public class StringValidation {
 
