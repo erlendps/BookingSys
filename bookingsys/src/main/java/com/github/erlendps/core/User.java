@@ -1,6 +1,7 @@
 package com.github.erlendps.core;
 
 import com.github.erlendps.util.DateChecker;
+import com.github.erlendps.util.StringBuilding;
 import com.github.erlendps.util.StringValidation;
 
 import javax.persistence.*;
@@ -121,15 +122,19 @@ public class User implements GroupListener {
     bookable.addBooking(booking);
   }
 
+
   /**
    * Receives the notification.
    *
-   * @param before the state before the change
-   * @param after  the state after the change
+   * @param bookable
+   * @param start
+   * @param end
+   * @param msg
    */
   @Override
-  public void receiveNotification(Object before, Object after) {
-
+  public void receiveNotification(User user, Bookable bookable,
+                                  LocalDate start, LocalDate end, Message msg) {
+    
   }
 }
 
