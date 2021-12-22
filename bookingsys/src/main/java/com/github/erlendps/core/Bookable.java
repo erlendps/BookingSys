@@ -66,6 +66,8 @@ public class Bookable {
       throw new IllegalArgumentException("Booking is null.");
     }
     this.put(booking);
+    group.notifyListeners(booking.getUser() ,this,
+            booking.getStartDate(), booking.getEndDate(), Message.NEW_BOOKING);
   }
 
   public void put(AbstractBooking booking) {
@@ -119,5 +121,7 @@ public class Bookable {
         bookingMap.remove(dateIterator.next());
       }
     }
+    group.notifyListeners(booking.getUser(), this, booking.getStartDate(),
+            booking.getEndDate(), Message.REMOVED_BOOKING);
   }
 }
