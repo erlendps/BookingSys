@@ -1,5 +1,7 @@
 package com.github.erlendps.util;
 
+import java.time.LocalDate;
+
 public class StringValidation {
 
   /**
