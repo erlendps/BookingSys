@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-public class AbstractBooking {
+public abstract class AbstractBooking {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   protected Long id;
@@ -29,4 +29,24 @@ public class AbstractBooking {
   }
 
   protected AbstractBooking() {}
+
+  public LocalDate getStartDate() {
+    return startDate;
+  }
+
+  public LocalDate getEndDate() {
+    return endDate;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public Bookable getBookable() {
+    return bookable;
+  }
+
+  public Group getGroup() {
+    return getBookable().getGroup();
+  }
 }
