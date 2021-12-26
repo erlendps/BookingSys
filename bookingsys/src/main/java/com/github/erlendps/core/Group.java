@@ -15,9 +15,18 @@ public class Group {
   private Collection<User> members = new ArrayList<>();
   private String name;
 
-  public void notifyListeners(User user, Bookable bookable,
-                              LocalDate start, LocalDate end, Message msg) {
-    members.forEach(member -> member.receiveNotification(user, bookable, start, end, msg));
+  public Group(String name) {
+    this.name = name;
+  }
+
+  protected Group() {}
+
+  public void notifyListeners(AbstractBooking booking, Message msg) {
+    members.forEach(member -> member.receiveNotification(booking, msg));
+  }
+
+  public void addMember(User user) {
+    members.add(user);
   }
 
   public String getName() {
