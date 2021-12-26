@@ -1,5 +1,6 @@
 package com.github.erlendps.core;
 
+import com.github.erlendps.email.EmailSenderHelper;
 import com.github.erlendps.util.DateChecker;
 import com.github.erlendps.util.StringBuilding;
 import com.github.erlendps.util.StringValidation;
@@ -126,15 +127,35 @@ public class User implements GroupListener {
   /**
    * Receives the notification.
    *
-   * @param bookable
-   * @param start
-   * @param end
-   * @param msg
+   * @param booking the booking
+   * @param msg Enum message
    */
   @Override
-  public void receiveNotification(User user, Bookable bookable,
-                                  LocalDate start, LocalDate end, Message msg) {
-    
+  public void receiveNotification(AbstractBooking booking, Message msg) {
+    String text = null;
+    if (msg == Message.NEW_BOOKING) {
+      if (booking instanceof SingleDayBooking res) {
+        if (this == res.getUser()) {
+          text = StringBuilding.singleDayBookerString(res);
+        } else text = StringBuilding.singleDayNonBookersString(this, res);
+      } else if (booking instanceof MultipleDayBooking res) {
+        if (this == res.getUser()) {
+          text = StringBuilding.multipleDayBookerString(res);
+        } else text = StringBuilding.multipleDayNonBookersString(this, res);
+      }
+    } else if (msg == Message.REMOVED_BOOKING) {
+      if (booking instanceof SingleDayBooking res) {
+        if (this == res.getUser()) {
+          text = StringBuilding.removeSingleDayBookerString(res);
+        } else text = StringBuilding.removeSingleDayNonBookersString(this, res);
+      } else if (booking instanceof MultipleDayBooking res) {
+        if (this == res.getUser()) {
+        text = StringBuilding.removeMultipleDayBookerString(res);
+        } else text = StringBuilding.removeMultipleDayNonBookersString(this, res);
+      }
+    }
+    if (text == null) throw new IllegalStateException("Not a valid booking");
+    EmailSenderHelper.sendSimpleMail(getEmail(), "Change in " + booking.getGroup().getName(), text);
   }
 }
 
