@@ -4,6 +4,7 @@ import com.github.erlendps.email.EmailSenderHelper;
 import com.github.erlendps.util.DateChecker;
 import com.github.erlendps.util.StringBuilding;
 import com.github.erlendps.util.StringValidation;
+import org.springframework.mail.MailException;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -155,7 +156,11 @@ public class User implements GroupListener {
       }
     }
     if (text == null) throw new IllegalStateException("Not a valid booking");
-    EmailSenderHelper.sendSimpleMail(getEmail(), "Change in " + booking.getGroup().getName(), text);
+    try {
+      EmailSenderHelper.sendSimpleMail(getEmail(), "Change in " + booking.getGroup().getName(), text);
+    } catch (MailException e) {
+      throw new IllegalStateException("Error sending mail, email probably does not exist.");
+    }
   }
 }
 
