@@ -9,6 +9,7 @@ import javax.persistence.*;
 /**
  * Bookable class, is the object that you can book, e.g a cabin/boat.
  */
+@Embeddable
 @Entity
 public class Bookable {
   @Id
@@ -58,8 +59,10 @@ public class Bookable {
     if (booking == null) {
       throw new IllegalArgumentException("Booking is null.");
     }
-    this.put(booking);
-    group.notifyListeners(booking, Message.NEW_BOOKING);
+    if (isAvailable(booking.getStartDate(), booking.getEndDate())) {
+      this.put(booking);
+      group.notifyListeners(booking, Message.NEW_BOOKING);
+    } else throw new IllegalStateException("Bookable is not available");
   }
 
   public void put(AbstractBooking booking) {
