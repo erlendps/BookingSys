@@ -1,10 +1,8 @@
 package com.github.erlendps.rest;
 
 import com.github.erlendps.core.Bookable;
-import com.github.erlendps.core.BookableType;
 import com.github.erlendps.core.Group;
 import com.github.erlendps.core.User;
-import com.github.erlendps.email.EmailSenderHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +18,7 @@ public class Controller {
     Group group = new Group("test");
     group.addMember(user);
     group.addMember(user2);
-    Bookable bookable = new Bookable("TestBookable", BookableType.BOAT, group);
+    Bookable bookable = new Bookable("TestBookable", group);
     user.makeBooking(LocalDate.now().plusDays(1), LocalDate.now().plusDays(3), bookable);
     return "Sent successfully";
   }
