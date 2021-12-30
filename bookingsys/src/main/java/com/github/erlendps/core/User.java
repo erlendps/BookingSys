@@ -124,6 +124,20 @@ public class User implements GroupListener {
     bookable.addBooking(booking);
   }
 
+  public void makeNewBookable(String name, Group group) {
+    if (group == null || !groups.contains(group)) {
+      throw new IllegalStateException("You are not in this group.");
+    }
+    Bookable bookable = new Bookable(name, group);
+    group.addBookable(bookable);
+  }
+
+  public void deleteBookable(Group group, Bookable bookable) {
+    if (group == null || !groups.contains(group)) {
+      throw new IllegalStateException("You are not in this group.");
+    }
+    group.removeBookable(bookable);
+  }
 
   /**
    * Receives the notification.
