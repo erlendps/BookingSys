@@ -15,7 +15,6 @@ public class Bookable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
   private String name;
-  private BookableType type;
   private Group group;
   @OneToMany
   private final Map<LocalDate, AbstractBooking> bookingMap = new HashMap<>();
@@ -26,12 +25,11 @@ public class Bookable {
    * Constructor for bookable.
    *
    * @param name name of the object
-   * @param type type of bookable
    * @param group group it belongs to
    *
    * @throws IllegalArgumentException if name does not match regex or if group is null
    */
-  public Bookable(String name, BookableType type, Group group) {
+  public Bookable(String name, Group group) {
     if (!StringValidation.matchName(name)) {
       throw new IllegalArgumentException("Name for bookable is not valid.");
     }
@@ -40,7 +38,6 @@ public class Bookable {
     }
     this.name = name;
     this.group = group;
-    this.type = Objects.requireNonNullElse(type, BookableType.OTHER);
   }
 
   public final String getName() {
@@ -51,10 +48,6 @@ public class Bookable {
       throw new IllegalArgumentException("Name for bookable is not valid.");
     }
     this.name = name;
-  }
-
-  public BookableType getType() {
-    return type;
   }
 
   public Group getGroup() {
